@@ -25,18 +25,20 @@ struct PopoverView: View {
                         } label: {
                             Image(systemName: "gauge.with.dots.needle.33percent")
                                 .scaledFont(13, weight: .medium)
-                                .frame(width: 28, height: 28)
+                                .frame(width: 28 * appState.textScale, height: 28 * appState.textScale)
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel("Open Activity Monitor")
+                        .help("Open Activity Monitor")
 
                         SettingsLink {
                             Image(systemName: "gearshape.fill")
                                 .scaledFont(13, weight: .medium)
-                                .frame(width: 28, height: 28)
+                                .frame(width: 28 * appState.textScale, height: 28 * appState.textScale)
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel("Open Settings")
+                        .help("Open Settings")
                     }
                 }
 

@@ -228,6 +228,9 @@ final class AppState {
         powerMonitor.onStateChanged = { [weak self] in
             self?.startMonitoring()
         }
+        powerMonitor.onBatteryDataChanged = { [weak self] in
+            self?.refreshBattery()
+        }
 
         // Pause polling while the display or the system is asleep — no point
         // reading IOKit, spawning processes and writing to disk when nobody
@@ -252,6 +255,15 @@ final class AppState {
     func stopMonitoring() {
         VitalsLog.app.info("stopMonitoring")
         Task { await monitor.stopPolling() }
+    }
+
+    /// Read immediately on power notifications and before showing the panel,
+    /// without adding an expensive full-system scan or changing its interval.
+    func refreshBattery() {
+        guard let battery = BatteryReader.read() else { return }
+        metrics.battery = battery
+        onMetricsUpdate?()
+        VitalsLog.battery.debug("battery refreshed immediately")
     }
 
     /// Refreshes the top-processes lists. Called on demand from the CPU/Memory

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MetricCardView<Content: View>: View {
 
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.textScale) private var textScale
 
     let metricType: MetricType
     let icon: String
@@ -12,11 +12,6 @@ struct MetricCardView<Content: View>: View {
     let history: MetricHistory
     let showsHistory: Bool
     @ViewBuilder let detail: () -> Content
-
-    /// Darken accent colors in light mode for better contrast on glass
-    private var colorBrightness: Double {
-        colorScheme == .light ? -0.25 : 0
-    }
 
     init(
         metricType: MetricType,
@@ -40,28 +35,15 @@ struct MetricCardView<Content: View>: View {
 
     var body: some View {
         GlassMorphicCard {
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 8 * textScale) {
                 // Title row
-                HStack(spacing: 6) {
-                    Image(systemName: icon)
-                        .scaledFont(13, weight: .semibold)
-                        .foregroundStyle(color)
-                        .brightness(colorBrightness)
-                    Text(title)
-                        .scaledFont(12, weight: .semibold, design: .rounded)
-                    Spacer()
-                    Text(value)
-                        .scaledFont(12, weight: .bold, design: .monospaced)
-                        .foregroundStyle(color)
-                        .brightness(colorBrightness)
-                        .contentTransition(.numericText())
-                }
+                MetricSectionHeader(title: title, icon: icon, color: color, value: value)
 
                 // Sparkline
                 if showsHistory {
-                    SparklineView(history: history, color: color)
-                        .frame(height: 28)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                    SparklineView(history: history, color: color, lineWidth: 1.4, lineOpacity: 1)
+                        .frame(height: 24)
+                        .accessibilityHidden(true)
                 }
 
                 // Optional detail content

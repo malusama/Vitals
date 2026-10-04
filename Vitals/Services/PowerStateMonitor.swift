@@ -9,6 +9,7 @@ final class PowerStateMonitor {
 
     var isOnBattery: Bool = false
     var onStateChanged: (() -> Void)?
+    var onBatteryDataChanged: (() -> Void)?
 
     private nonisolated(unsafe) var runLoopSource: CFRunLoopSource?
     private var retainedContext: Unmanaged<PowerStateMonitor>?
@@ -50,6 +51,9 @@ final class PowerStateMonitor {
                     VitalsLog.power.info("power source changed: onBattery=\(onBattery ? "true" : "false", privacy: .public)")
                     monitor.onStateChanged?()
                 }
+                // Adapter changes and charging updates can happen while the
+                // power source stays AC. Refresh readings on those events too.
+                monitor.onBatteryDataChanged?()
             }
         }
 

@@ -11,14 +11,7 @@ struct NetworkCardView: View {
     var body: some View {
         GlassMorphicCard {
             VStack(alignment: .leading, spacing: 10 * textScale) {
-                HStack(spacing: 6) {
-                    Image(systemName: "network")
-                        .scaledFont(13, weight: .semibold)
-                        .foregroundStyle(MetricAccentColor.blue(for: colorScheme))
-                    Text("Network")
-                        .scaledFont(12, weight: .semibold, design: .rounded)
-                    Spacer(minLength: 0)
-                }
+                MetricSectionHeader(title: "Network", icon: "network", color: MetricAccentColor.blue(for: colorScheme))
 
                 HStack(alignment: .top, spacing: 12) {
                     transferColumn(

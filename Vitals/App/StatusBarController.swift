@@ -164,6 +164,7 @@ final class StatusBarController {
 
     private func showPanel() {
         guard let button = statusItem.button else { return }
+        appState.refreshBattery()
         let buttonFrame = button.window?.convertToScreen(button.frame) ?? .zero
 
         // Always use full available height — panel is transparent so empty space is invisible

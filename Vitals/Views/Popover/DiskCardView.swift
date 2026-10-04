@@ -10,20 +10,7 @@ struct DiskCardView: View {
     var body: some View {
         GlassMorphicCard {
             VStack(alignment: .leading, spacing: 8 * textScale) {
-                HStack(spacing: 6) {
-                    Image(systemName: "internaldrive.fill")
-                        .scaledFont(13, weight: .semibold)
-                        .foregroundStyle(MetricAccentColor.blue(for: colorScheme))
-                    Text("Disk")
-                        .scaledFont(12, weight: .semibold, design: .rounded)
-                    Spacer(minLength: 6)
-                    Text(usedPercentage)
-                        .scaledFont(12, weight: .semibold, design: .rounded)
-                        .monospacedDigit()
-                        .foregroundStyle(.primary)
-                        .accessibilityLabel("Disk space used")
-                        .accessibilityValue(usedPercentage)
-                }
+                MetricSectionHeader(title: "Disk", icon: "internaldrive.fill", color: MetricAccentColor.blue(for: colorScheme), value: usedPercentage)
 
                 UsageBarView(value: disk.usageRatio, color: capacityColor, height: 4)
                     .accessibilityHidden(true)
@@ -68,8 +55,8 @@ struct DiskCardView: View {
     }
 
     private var capacityColor: Color {
-        if disk.usageRatio >= 0.95 { return .red }
-        if disk.usageRatio >= 0.9 { return .orange }
+        if disk.usageRatio >= 0.95 { return MetricAccentColor.red(for: colorScheme) }
+        if disk.usageRatio >= 0.9 { return MetricAccentColor.orange(for: colorScheme) }
         return MetricAccentColor.blue(for: colorScheme)
     }
 

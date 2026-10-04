@@ -39,7 +39,7 @@ struct BatteryCardView: View {
                 .lineLimit(1)
 
                 VStack(spacing: 6 * textScale) {
-                    powerRow("Adapter input", icon: "powerplug.fill", watts: battery.adapterPowerWatts)
+                    powerRow("Adapter input", icon: "powerplug.fill", watts: battery.adapterPowerWatts, subtitle: adapterLimitLabel)
                         .help(adapterHelp)
                     powerRow(batteryPowerLabel, icon: batteryPowerIcon, watts: battery.batteryPowerWatts.map { abs($0) }, emphasized: battery.isDischarging && battery.isPluggedIn)
                 }
@@ -106,28 +106,34 @@ struct BatteryCardView: View {
         }
     }
 
-    private var batteryColor: Color {
-        if battery.isCharging { return .green }
-        if battery.percentage < 10 { return .red }
-        if battery.percentage < 20 { return .orange }
-        return .green
+    private var adapterLimitLabel: String? {
+        battery.adapterMaxPowerWatts.map { String(localized: "\($0.formatted(.number.precision(.fractionLength(0)))) W limit") }
     }
 
-    private func powerRow(_ title: LocalizedStringKey, icon: String, watts: Double?, emphasized: Bool = false) -> some View {
-        HStack(spacing: 6) {
+    private var batteryColor: Color {
+        if battery.isCharging { return MetricAccentColor.green(for: colorScheme) }
+        if battery.percentage < 10 { return MetricAccentColor.red(for: colorScheme) }
+        if battery.percentage < 20 { return MetricAccentColor.orange(for: colorScheme) }
+        return MetricAccentColor.green(for: colorScheme)
+    }
+
+    private func powerRow(_ title: LocalizedStringKey, icon: String, watts: Double?, emphasized: Bool = false, subtitle: String? = nil) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
             Image(systemName: icon)
                 .frame(width: 12 * textScale)
                 .scaledFont(10)
                 .adaptiveSecondary()
-            Text(title)
-                .scaledFont(10)
-                .adaptiveSecondary()
+            VStack(alignment: .leading, spacing: 2 * textScale) {
+                Text(title).scaledFont(10).adaptiveSecondary()
+                if let subtitle {
+                    Text(subtitle).scaledFont(9).monospacedDigit().adaptiveSecondary()
+                }
+            }
             Spacer(minLength: 6)
             Text(Formatters.formatWatts(watts))
                 .scaledFont(12, weight: .semibold, design: .rounded)
                 .monospacedDigit()
-                .foregroundStyle(emphasized ? Color.orange : Color.primary)
-                .brightness(emphasized && colorScheme == .light ? -0.2 : 0)
+                .foregroundStyle(emphasized ? MetricAccentColor.orange(for: colorScheme) : Color.primary)
                 .fixedSize()
         }
         .accessibilityElement(children: .combine)
