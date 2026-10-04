@@ -1,6 +1,94 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Discharging on AC": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vybíjení při připojení"
+          }
+        }
+      }
+    },
+    "Adapter input": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Příkon adaptéru"
+          }
+        }
+      }
+    },
+    "Battery output": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Výkon baterie"
+          }
+        }
+      }
+    },
+    "Battery charging": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nabíjení baterie"
+          }
+        }
+      }
+    },
+    "Battery idle": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baterie v klidu"
+          }
+        }
+      }
+    },
+    "%@ to full": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ do nabití"
+          }
+        }
+      }
+    },
+    "%@ left": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zbývá %@"
+          }
+        }
+      }
+    },
+    "%lld cycles": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld cyklů"
+          }
+        }
+      }
+    },
     "AC + Battery": {
       "extractionState": "manual",
       "localizations": {

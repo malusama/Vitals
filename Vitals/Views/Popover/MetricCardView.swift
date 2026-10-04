@@ -10,6 +10,7 @@ struct MetricCardView<Content: View>: View {
     let value: String
     let color: Color
     let history: MetricHistory
+    let showsHistory: Bool
     @ViewBuilder let detail: () -> Content
 
     /// Darken accent colors in light mode for better contrast on glass
@@ -24,6 +25,7 @@ struct MetricCardView<Content: View>: View {
         value: String,
         color: Color = .accentColor,
         history: MetricHistory,
+        showsHistory: Bool = true,
         @ViewBuilder detail: @escaping () -> Content = { EmptyView() }
     ) {
         self.metricType = metricType
@@ -32,6 +34,7 @@ struct MetricCardView<Content: View>: View {
         self.value = value
         self.color = color
         self.history = history
+        self.showsHistory = showsHistory
         self.detail = detail
     }
 
@@ -55,9 +58,11 @@ struct MetricCardView<Content: View>: View {
                 }
 
                 // Sparkline
-                SparklineView(history: history, color: color)
-                    .frame(height: 28)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                if showsHistory {
+                    SparklineView(history: history, color: color)
+                        .frame(height: 28)
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                }
 
                 // Optional detail content
                 detail()
