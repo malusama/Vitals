@@ -3,7 +3,7 @@ import Foundation
 struct MetricSnapshot: Identifiable, Sendable {
     let id = UUID()
     let timestamp: Date
-    let value: Double   // 0.0 – 1.0 normalized
+    let value: Double   // Usage ratios: 0.0–1.0; network throughput: bytes/sec.
 }
 
 struct MetricHistory: Sendable {

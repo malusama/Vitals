@@ -5,6 +5,9 @@ struct SparklineView: View {
     @Environment(\.colorScheme) private var colorScheme
     let history: MetricHistory
     var color: Color = .accentColor
+    var upperBound: Double = 1
+    var lineWidth: CGFloat = 1.2
+    var lineOpacity: Double?
 
     var body: some View {
         let isLight = colorScheme == .light
@@ -26,13 +29,13 @@ struct SparklineView: View {
                 x: .value("Time", snapshot.timestamp),
                 y: .value("Value", snapshot.value)
             )
-            .foregroundStyle(color.opacity(isLight ? 0.7 : 0.9))
-            .lineStyle(StrokeStyle(lineWidth: 1.2))
+            .foregroundStyle(color.opacity(lineOpacity ?? (isLight ? 0.7 : 0.9)))
+            .lineStyle(StrokeStyle(lineWidth: lineWidth))
             .interpolationMethod(.catmullRom)
         }
         .chartXAxis(.hidden)
         .chartYAxis(.hidden)
-        .chartYScale(domain: 0...1)
+        .chartYScale(domain: 0...upperBound)
         .chartPlotStyle { plotArea in
             plotArea
                 .background(color.opacity(isLight ? 0.06 : 0.04))

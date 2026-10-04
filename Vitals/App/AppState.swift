@@ -296,13 +296,8 @@ final class AppState {
         memoryHistory.append(newMetrics.memory.usageRatio, at: now)
         diskHistory.append(newMetrics.disk.usageRatio, at: now)
 
-        let maxSpeed: Double = 10 * 1024 * 1024 * 1024
-        networkDownHistory.append(
-            min(Double(newMetrics.network.downloadSpeed) / maxSpeed, 1.0), at: now
-        )
-        networkUpHistory.append(
-            min(Double(newMetrics.network.uploadSpeed) / maxSpeed, 1.0), at: now
-        )
+        networkDownHistory.append(Double(newMetrics.network.downloadSpeed), at: now)
+        networkUpHistory.append(Double(newMetrics.network.uploadSpeed), at: now)
 
         if let battery = newMetrics.battery {
             batteryHistory.append(Double(battery.percentage) / 100.0, at: now)
