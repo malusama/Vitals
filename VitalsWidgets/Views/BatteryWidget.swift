@@ -133,9 +133,7 @@ struct BatteryWidgetView: View {
 
     private var statusLabel: String {
         guard let bat else { return String(localized: "Battery") }
-        if bat.isCharging { return String(localized: "Charging") }
-        if bat.isPluggedIn { return String(localized: "Plugged") }
-        return String(localized: "Battery")
+        return bat.statusLabel
     }
 
     private var timeLabel: LocalizedStringKey {
@@ -146,9 +144,6 @@ struct BatteryWidgetView: View {
         guard let bat else { return nil }
         if let time = bat.timeRemaining, time > 0 {
             return Formatters.formatDuration(time)
-        }
-        if bat.isPluggedIn {
-            return "\u{221E}"
         }
         return nil
     }

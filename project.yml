@@ -55,7 +55,27 @@ targets:
         PRODUCT_NAME: VitalsWidgets
         SWIFT_STRICT_CONCURRENCY: targeted
 
+  VitalsBatteryTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests
+      - path: Shared/SystemMetrics.swift
+      - path: Shared/BatteryReader.swift
+      - path: Shared/Formatters.swift
+      - path: Shared/VitalsLog.swift
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: true
+
 schemes:
+  VitalsBatteryTests:
+    build:
+      targets:
+        VitalsBatteryTests: all
+    test:
+      targets:
+        - VitalsBatteryTests
   Vitals:
     build:
       targets:

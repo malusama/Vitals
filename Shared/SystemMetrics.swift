@@ -63,6 +63,44 @@ struct BatteryMetrics: Codable, Sendable {
     let cycleCount: Int?
     let maxCapacity: Int?       // mAh current max
     let designCapacity: Int?    // mAh original design
+    /// Net battery power in watts: positive charges, negative supplies the Mac.
+    let batteryPowerWatts: Double?
+    /// Measured adapter input, distinct from the negotiated adapter limit.
+    let adapterPowerWatts: Double?
+    let adapterMaxPowerWatts: Double?
+
+    init(
+        percentage: Int, isCharging: Bool, isPluggedIn: Bool,
+        timeRemaining: TimeInterval?, cycleCount: Int?, maxCapacity: Int?, designCapacity: Int?,
+        batteryPowerWatts: Double? = nil, adapterPowerWatts: Double? = nil,
+        adapterMaxPowerWatts: Double? = nil
+    ) {
+        self.percentage = percentage
+        self.isCharging = isCharging
+        self.isPluggedIn = isPluggedIn
+        self.timeRemaining = timeRemaining
+        self.cycleCount = cycleCount
+        self.maxCapacity = maxCapacity
+        self.designCapacity = designCapacity
+        self.batteryPowerWatts = batteryPowerWatts
+        self.adapterPowerWatts = adapterPowerWatts
+        self.adapterMaxPowerWatts = adapterMaxPowerWatts
+    }
+
+    var isDischarging: Bool {
+        if let batteryPowerWatts { return batteryPowerWatts < -0.1 }
+        return !isPluggedIn && !isCharging
+    }
+
+    var chargePowerWatts: Double? { batteryPowerWatts.map { Swift.max(0, $0) } }
+    var dischargePowerWatts: Double? { batteryPowerWatts.map { Swift.max(0, -$0) } }
+
+    var statusLabel: String {
+        if isDischarging && isPluggedIn { return String(localized: "AC + Battery") }
+        if isDischarging { return String(localized: "On Battery") }
+        if isCharging { return String(localized: "Charging") }
+        return isPluggedIn ? String(localized: "Plugged In") : String(localized: "On Battery")
+    }
 
     var healthPercent: Int? {
         guard let max = maxCapacity, let design = designCapacity, design > 0 else { return nil }

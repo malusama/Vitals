@@ -18,12 +18,12 @@ struct BatteryDetailView: View {
             ) {
                 VStack(spacing: 4) {
                     HStack {
-                        miniLabel("Status", bat.isCharging ? String(localized: "Charging") : (bat.isPluggedIn ? String(localized: "Plugged In") : String(localized: "On Battery")))
+                        miniLabel("Status", bat.statusLabel)
                         Spacer()
                         if let time = bat.timeRemaining, time > 0 {
                             miniLabel(bat.isCharging ? "Full In" : "Remaining", Formatters.formatDuration(time))
-                        } else if bat.isPluggedIn {
-                            miniLabel("Remaining", "\u{221E}")
+                        } else {
+                            miniLabel(bat.isCharging ? "Full In" : "Remaining", "—")
                         }
                         Spacer()
                         if let temp = appState.metrics.thermal.batteryTemperature {
@@ -35,6 +35,15 @@ struct BatteryDetailView: View {
                             }
                         }
                     }
+                    HStack {
+                        miniLabel("Adapter In", Formatters.formatWatts(bat.adapterPowerWatts))
+                            .help(adapterHelp(bat))
+                        Spacer()
+                        miniLabel("Battery Charge", Formatters.formatWatts(bat.chargePowerWatts))
+                        Spacer()
+                        miniLabel("Battery Out", Formatters.formatWatts(bat.dischargePowerWatts))
+                    }
+                    .padding(.vertical, 3)
                     HStack(spacing: 16) {
                         if let health = bat.healthPercent {
                             miniLabel("Health", "\(health)%")
@@ -49,6 +58,13 @@ struct BatteryDetailView: View {
                 .adaptiveSecondary()
             }
         }
+    }
+
+    private func adapterHelp(_ bat: BatteryMetrics) -> String {
+        if let limit = bat.adapterMaxPowerWatts {
+            return String(localized: "Measured adapter input. Negotiated limit:") + " " + Formatters.formatWatts(limit)
+        }
+        return String(localized: "Measured adapter input.")
     }
 
     private func batteryIcon(_ bat: BatteryMetrics) -> String {

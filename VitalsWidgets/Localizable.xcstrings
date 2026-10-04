@@ -1,6 +1,39 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "AC + Battery": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Síť + baterie"
+          }
+        }
+      }
+    },
+    "On Battery": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na baterii"
+          }
+        }
+      }
+    },
+    "Plugged In": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Připojeno"
+          }
+        }
+      }
+    },
     "%": {},
     "%@": {},
     "%@ free": {

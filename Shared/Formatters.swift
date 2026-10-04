@@ -36,6 +36,11 @@ enum Formatters {
 
     // MARK: - Duration
 
+    static func formatWatts(_ watts: Double?) -> String {
+        guard let watts else { return "—" }
+        return watts.formatted(.number.precision(.fractionLength(1))) + " W"
+    }
+
     static func formatDuration(_ seconds: TimeInterval) -> String {
         let totalMinutes = Int(seconds) / 60
         let hours = totalMinutes / 60

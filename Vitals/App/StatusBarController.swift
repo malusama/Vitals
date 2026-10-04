@@ -107,10 +107,8 @@ final class StatusBarController {
                 addIcon("clock")
                 if let time = bat.timeRemaining, time > 0 {
                     addText(Formatters.formatDuration(time))
-                } else if bat.isPluggedIn {
-                    addText("\u{221E}")
                 } else {
-                    continue
+                    addText("—")
                 }
             case .disk:
                 addIcon("internaldrive.fill")

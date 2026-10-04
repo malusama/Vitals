@@ -1,6 +1,72 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "AC + Battery": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Síť + baterie"
+          }
+        }
+      }
+    },
+    "Adapter In": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Příkon adaptéru"
+          }
+        }
+      }
+    },
+    "Battery Charge": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nabíjení baterie"
+          }
+        }
+      }
+    },
+    "Battery Out": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Výkon baterie"
+          }
+        }
+      }
+    },
+    "Measured adapter input.": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naměřený příkon adaptéru."
+          }
+        }
+      }
+    },
+    "Measured adapter input. Negotiated limit:": {
+      "extractionState": "manual",
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naměřený příkon adaptéru. Dohodnutý limit:"
+          }
+        }
+      }
+    },
     "%@" : {
 
     },

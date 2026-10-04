@@ -45,64 +45,9 @@ enum LocalMetrics {
 
     // MARK: - Battery
 
-    /// Reads charge level plus, via IORegistry, health (current vs design
-    /// capacity) and cycle count. Returns nil on desktop Macs without a battery.
+    /// Uses the same power-direction and health reader as the live monitor.
     static func readBattery() -> BatteryMetrics? {
-        let snapshot = IOPSCopyPowerSourcesInfo().takeRetainedValue()
-        let sources = IOPSCopyPowerSourcesList(snapshot).takeRetainedValue() as Array
-
-        // No battery is normal on a desktop Mac, so this is not an error.
-        guard let firstSource = sources.first else { return nil }
-
-        guard let info = IOPSGetPowerSourceDescription(snapshot, firstSource).takeUnretainedValue() as? [String: Any] else {
-            VitalsLog.widgets.error("LocalMetrics.readBattery: failed to read power source description")
-            return nil
-        }
-
-        let percentage = info[kIOPSCurrentCapacityKey] as? Int ?? 0
-        let isCharging = (info[kIOPSIsChargingKey] as? Bool) ?? false
-        let powerSource = info[kIOPSPowerSourceStateKey] as? String
-        let isPluggedIn = powerSource == kIOPSACPowerValue
-
-        var timeRemaining: TimeInterval?
-        if let minutes = info[kIOPSTimeToEmptyKey] as? Int, minutes >= 0 {
-            timeRemaining = TimeInterval(minutes * 60)
-        } else if let minutes = info[kIOPSTimeToFullChargeKey] as? Int, minutes >= 0, isCharging {
-            timeRemaining = TimeInterval(minutes * 60)
-        }
-
-        // Health values live in IORegistry AppleSmartBattery — same keys the
-        // main app's BatteryMonitor uses. AppleRawMaxCapacity / DesignCapacity
-        // (mAh) give the health percentage; CycleCount is the wear indicator.
-        let cycleCount = readSmartBatteryValue("CycleCount") as? Int
-        // On Apple Silicon the capacity keys are nested inside the "BatteryData"
-        // dictionary rather than top-level (top-level MaxCapacity is a percentage).
-        let batteryData = readSmartBatteryValue("BatteryData") as? [String: Any]
-        let maxCapacity = readSmartBatteryValue("AppleRawMaxCapacity") as? Int
-            ?? readSmartBatteryValue("NominalChargeCapacity") as? Int
-            ?? batteryData?["NominalChargeCapacity"] as? Int
-        let designCapacity = readSmartBatteryValue("DesignCapacity") as? Int
-            ?? batteryData?["DesignCapacity"] as? Int
-
-        return BatteryMetrics(
-            percentage: percentage,
-            isCharging: isCharging,
-            isPluggedIn: isPluggedIn,
-            timeRemaining: timeRemaining,
-            cycleCount: cycleCount,
-            maxCapacity: maxCapacity,
-            designCapacity: designCapacity
-        )
-    }
-
-    private static func readSmartBatteryValue(_ key: String) -> Any? {
-        let service = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("AppleSmartBattery"))
-        guard service != IO_OBJECT_NULL else {
-            VitalsLog.widgets.error("LocalMetrics: AppleSmartBattery service not found (key=\(key, privacy: .public))")
-            return nil
-        }
-        defer { IOObjectRelease(service) }
-        return IORegistryEntryCreateCFProperty(service, key as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue()
+        BatteryReader.read()
     }
 
     // MARK: - System info
