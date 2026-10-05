@@ -3,13 +3,14 @@ import SwiftUI
 struct DiskCardView: View {
     @Environment(\.textScale) private var textScale
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.metricCardPresentation) private var presentation
 
     let disk: DiskMetrics
     let temperature: Double?
 
     var body: some View {
         GlassMorphicCard {
-            VStack(alignment: .leading, spacing: 8 * textScale) {
+            VStack(alignment: .leading, spacing: presentation.spacing(8, textScale: textScale)) {
                 MetricSectionHeader(title: "Disk", icon: "internaldrive.fill", color: MetricAccentColor.blue(for: colorScheme), value: usedPercentage)
 
                 UsageBarView(value: disk.usageRatio, color: capacityColor, height: 4)
@@ -26,7 +27,7 @@ struct DiskCardView: View {
                 .adaptiveSecondary()
                 .accessibilityElement(children: .combine)
 
-                VStack(spacing: 6 * textScale) {
+                VStack(spacing: presentation.spacing(6, textScale: textScale)) {
                     transferRow("Read", icon: "arrow.down.doc", speed: disk.readSpeed)
                     transferRow("Write", icon: "arrow.up.doc", speed: disk.writeSpeed)
                 }

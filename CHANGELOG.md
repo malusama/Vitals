@@ -2,6 +2,13 @@
 
 All notable changes to Vitals will be documented in this file.
 
+## [2.5.7] - 2026-10-05 (malusama fork)
+
+### Changed
+- Tighter card and toolbar padding, with detail spacing that compensates for larger text, let all six core cards fit fully expanded on the tested display.
+- Preserve the 280-point single column, all detailed readings, text sizes, and graph heights.
+- Refresh README screenshots, including the fully expanded six-card layout.
+
 ## [2.5.6] - 2026-10-05 (malusama fork)
 
 ### Added

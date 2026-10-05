@@ -24,6 +24,14 @@ private struct TextColorIsDarkKey: EnvironmentKey {
 
 enum MetricCardPresentation {
     case standard, compact, details
+
+    /// Inline details share their parent card, so they need less separation
+    /// than a standalone card while keeping the same text and chart sizes.
+    func spacing(_ points: CGFloat, textScale: Double) -> CGFloat {
+        // Enlarged text uses the available height for glyphs rather than gaps.
+        let density = max(0.15, 1.5 - textScale)
+        return (self == .details ? max(1, points * density) : points) * textScale
+    }
 }
 
 private struct MetricCardPresentationKey: EnvironmentKey {
@@ -101,6 +109,7 @@ struct GlassMorphicCard<Content: View>: View {
     @Environment(\.glassVariantEnv) private var glassVariant
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.metricCardPresentation) private var presentation
+    @Environment(\.textScale) private var textScale
     @ViewBuilder let content: () -> Content
 
     private var overlayColor: Color {
@@ -118,7 +127,7 @@ struct GlassMorphicCard<Content: View>: View {
     private var card: some View {
         content()
             .padding(.horizontal, presentation == .compact ? 12 : 14)
-            .padding(.vertical, presentation == .compact ? 10 : 12)
+            .padding(.vertical, presentation == .compact ? max(6, 8 - max(0, textScale - 1) * 4) : 12)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .fill(overlayColor.opacity(glassOpacity))

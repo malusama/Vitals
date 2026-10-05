@@ -14,7 +14,7 @@ struct CompactSectionCard: View {
 
     var body: some View {
         GlassMorphicCard {
-            VStack(alignment: .leading, spacing: 6 * textScale) {
+            VStack(alignment: .leading, spacing: 4 * textScale) {
                 Button {
                     isExpanded.toggle()
                 } label: {

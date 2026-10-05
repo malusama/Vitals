@@ -43,7 +43,7 @@ struct PopoverView: View {
     }
 
     private var dashboard: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 5) {
             GlassMorphicCard {
                 HStack {
                     Text("Vitals")
@@ -55,7 +55,7 @@ struct PopoverView: View {
                     } label: {
                         Image(systemName: "gauge.with.dots.needle.33percent")
                             .scaledFont(13, weight: .medium)
-                            .frame(width: 28 * appState.textScale, height: 28 * appState.textScale)
+                            .frame(width: 24 * appState.textScale, height: 24 * appState.textScale)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Open Activity Monitor")
@@ -64,13 +64,14 @@ struct PopoverView: View {
                     SettingsLink {
                         Image(systemName: "gearshape.fill")
                             .scaledFont(13, weight: .medium)
-                            .frame(width: 28 * appState.textScale, height: 28 * appState.textScale)
+                            .frame(width: 24 * appState.textScale, height: 24 * appState.textScale)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Open Settings")
                     .help("Open Settings")
                 }
             }
+            .environment(\.metricCardPresentation, .compact)
             ForEach(visibleSections) { section in
                 CompactSectionCard(
                     section: section,
@@ -84,7 +85,7 @@ struct PopoverView: View {
                 )
             }
         }
-        .padding(10)
+        .padding(8)
         .frame(width: min(280, maximumSize.width))
         .fixedSize()
         .onGeometryChange(for: CGSize.self) { geometry in

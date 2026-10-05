@@ -3,6 +3,7 @@ import SwiftUI
 struct MetricCardView<Content: View>: View {
 
     @Environment(\.textScale) private var textScale
+    @Environment(\.metricCardPresentation) private var presentation
 
     let metricType: MetricType
     let icon: String
@@ -35,7 +36,7 @@ struct MetricCardView<Content: View>: View {
 
     var body: some View {
         GlassMorphicCard {
-            VStack(alignment: .leading, spacing: 8 * textScale) {
+            VStack(alignment: .leading, spacing: presentation.spacing(8, textScale: textScale)) {
                 // Title row
                 MetricSectionHeader(title: title, icon: icon, color: color, value: value)
 

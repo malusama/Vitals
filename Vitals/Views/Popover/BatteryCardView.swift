@@ -3,6 +3,7 @@ import SwiftUI
 struct BatteryCardView: View {
     @Environment(\.textScale) private var textScale
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.metricCardPresentation) private var presentation
 
     let battery: BatteryMetrics
     let temperature: Double?
@@ -18,7 +19,7 @@ struct BatteryCardView: View {
             history: history,
             showsHistory: false
         ) {
-            VStack(alignment: .leading, spacing: 8 * textScale) {
+            VStack(alignment: .leading, spacing: presentation.spacing(8, textScale: textScale)) {
                 UsageBarView(value: Double(battery.percentage) / 100, color: batteryColor, height: 4)
                     .accessibilityHidden(true)
 
@@ -38,7 +39,7 @@ struct BatteryCardView: View {
                 }
                 .lineLimit(1)
 
-                VStack(spacing: 6 * textScale) {
+                VStack(spacing: presentation.spacing(6, textScale: textScale)) {
                     powerRow("Adapter input", icon: "powerplug.fill", watts: battery.adapterPowerWatts, subtitle: adapterLimitLabel)
                         .help(adapterHelp)
                     powerRow(batteryPowerLabel, icon: batteryPowerIcon, watts: battery.batteryPowerWatts.map { abs($0) }, emphasized: battery.isDischarging && battery.isPluggedIn)

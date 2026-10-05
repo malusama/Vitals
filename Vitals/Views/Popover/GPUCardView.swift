@@ -3,11 +3,12 @@ import SwiftUI
 struct GPUCardView: View {
     @Environment(\.textScale) private var textScale
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.metricCardPresentation) private var presentation
     let gpu: GPUMetrics
 
     var body: some View {
         GlassMorphicCard {
-            VStack(alignment: .leading, spacing: 8 * textScale) {
+            VStack(alignment: .leading, spacing: presentation.spacing(8, textScale: textScale)) {
                 MetricSectionHeader(
                     title: "GPU", icon: "display", color: MetricAccentColor.purple(for: colorScheme),
                     value: gpu.utilization.map { $0.formatted(.percent.precision(.fractionLength(0))) } ?? "—"

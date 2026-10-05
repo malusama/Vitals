@@ -3,6 +3,7 @@ import SwiftUI
 struct NetworkCardView: View {
     @Environment(\.textScale) private var textScale
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.metricCardPresentation) private var presentation
 
     let network: NetworkMetrics
     let downloadHistory: MetricHistory
@@ -10,7 +11,7 @@ struct NetworkCardView: View {
 
     var body: some View {
         GlassMorphicCard {
-            VStack(alignment: .leading, spacing: 10 * textScale) {
+            VStack(alignment: .leading, spacing: presentation.spacing(10, textScale: textScale)) {
                 MetricSectionHeader(title: "Network", icon: "network", color: MetricAccentColor.blue(for: colorScheme))
 
                 HStack(alignment: .top, spacing: 12) {
@@ -44,7 +45,7 @@ struct NetworkCardView: View {
         _ title: LocalizedStringKey, icon: String, speed: UInt64,
         total: UInt64, history: MetricHistory, color: Color
     ) -> some View {
-        VStack(alignment: .leading, spacing: 6 * textScale) {
+        VStack(alignment: .leading, spacing: presentation.spacing(6, textScale: textScale)) {
             HStack(spacing: 4) {
                 Image(systemName: icon)
                     .scaledFont(9, weight: .semibold)

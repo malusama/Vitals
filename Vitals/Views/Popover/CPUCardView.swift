@@ -3,6 +3,7 @@ import SwiftUI
 struct CPUCardView: View {
     @Environment(\.textScale) private var textScale
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.metricCardPresentation) private var presentation
     let cpu: CPUMetrics
     let thermal: ThermalMetrics
     let history: MetricHistory
@@ -14,7 +15,7 @@ struct CPUCardView: View {
             color: MetricAccentColor.blue(for: colorScheme), history: history, showsHistory: cpu.totalCores > 0
         ) {
             if cpu.totalCores > 0 {
-                VStack(spacing: 8 * textScale) {
+                VStack(spacing: presentation.spacing(8, textScale: textScale)) {
                     HStack(spacing: 12) {
                         MetricValueRow(title: "User", value: percentage(cpu.userUsage)).frame(maxWidth: .infinity)
                         MetricValueRow(title: "System", value: percentage(cpu.systemUsage)).frame(maxWidth: .infinity)
@@ -28,7 +29,7 @@ struct CPUCardView: View {
 
                     if thermal.cpuTemperature != nil || thermal.fanRPM != nil || thermal.systemPower != nil {
                         Divider().opacity(0.4)
-                        VStack(spacing: 6 * textScale) {
+                        VStack(spacing: presentation.spacing(6, textScale: textScale)) {
                             if thermal.cpuTemperature != nil || thermal.fanRPM != nil {
                                 HStack(spacing: 12) {
                                     if let temperature = thermal.cpuTemperature {

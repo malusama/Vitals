@@ -3,11 +3,12 @@ import SwiftUI
 struct MemoryCardView: View {
     @Environment(\.textScale) private var textScale
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.metricCardPresentation) private var presentation
     let memory: MemoryMetrics
 
     var body: some View {
         GlassMorphicCard {
-            VStack(alignment: .leading, spacing: 8 * textScale) {
+            VStack(alignment: .leading, spacing: presentation.spacing(8, textScale: textScale)) {
                 MetricSectionHeader(
                     title: "Memory", icon: "memorychip.fill", color: MetricAccentColor.teal(for: colorScheme),
                     value: memory.total > 0 ? memory.usageRatio.formatted(.percent.precision(.fractionLength(0))) : "—"
@@ -22,7 +23,7 @@ struct MemoryCardView: View {
                     }
                     .scaledFont(9).adaptiveSecondary().accessibilityElement(children: .combine)
 
-                    VStack(spacing: 6 * textScale) {
+                    VStack(spacing: presentation.spacing(6, textScale: textScale)) {
                         MetricValueRow(title: "Active", value: Formatters.formatBytes(memory.active))
                         MetricValueRow(title: "Wired", value: Formatters.formatBytes(memory.wired))
                         MetricValueRow(title: "Compressed", value: Formatters.formatBytes(memory.compressed))
