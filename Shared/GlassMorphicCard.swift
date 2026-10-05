@@ -22,6 +22,14 @@ private struct TextColorIsDarkKey: EnvironmentKey {
     static let defaultValue: Bool = false
 }
 
+enum MetricCardPresentation {
+    case standard, compact, details
+}
+
+private struct MetricCardPresentationKey: EnvironmentKey {
+    static let defaultValue: MetricCardPresentation = .standard
+}
+
 extension EnvironmentValues {
     var glassOpacity: Double {
         get { self[GlassOpacityKey.self] }
@@ -42,6 +50,10 @@ extension EnvironmentValues {
     var textColorIsDark: Bool {
         get { self[TextColorIsDarkKey.self] }
         set { self[TextColorIsDarkKey.self] = newValue }
+    }
+    var metricCardPresentation: MetricCardPresentation {
+        get { self[MetricCardPresentationKey.self] }
+        set { self[MetricCardPresentationKey.self] = newValue }
     }
 }
 
@@ -88,6 +100,7 @@ struct GlassMorphicCard<Content: View>: View {
     @Environment(\.glassOpacity) private var glassOpacity
     @Environment(\.glassVariantEnv) private var glassVariant
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.metricCardPresentation) private var presentation
     @ViewBuilder let content: () -> Content
 
     private var overlayColor: Color {
@@ -95,9 +108,17 @@ struct GlassMorphicCard<Content: View>: View {
     }
 
     var body: some View {
+        if presentation == .details {
+            content()
+        } else {
+            card
+        }
+    }
+
+    private var card: some View {
         content()
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
+            .padding(.horizontal, presentation == .compact ? 12 : 14)
+            .padding(.vertical, presentation == .compact ? 10 : 12)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .fill(overlayColor.opacity(glassOpacity))

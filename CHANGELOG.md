@@ -2,6 +2,22 @@
 
 All notable changes to Vitals will be documented in this file.
 
+## [2.5.6] - 2026-10-05 (malusama fork)
+
+### Added
+- A 280-point single-column overview with expandable cards. Adapter input and battery charging/output power stay visible when the battery card is collapsed.
+- Native screenshots of the compact light/dark layout and expanded details in the README.
+
+### Changed
+- Clearer metric hierarchy and light/dark contrast across the popover cards.
+- Separate disk read/write readings and dynamically scaled network graphs.
+- Popover sizing follows its content and the screen containing the menu bar item.
+
+### Fixed
+- Battery charging status follows the measured signed battery power, including discharge while connected to AC.
+- Adapter input is distinguished from the negotiated adapter limit; missing power readings display a dash.
+- Battery data refreshes on macOS power notifications and before opening the popover.
+
 ## [2.5] - 2026-09-17
 
 ### Added

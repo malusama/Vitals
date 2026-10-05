@@ -4,6 +4,10 @@ struct PopoverView: View {
 
     @Environment(AppState.self) private var appState
     @Environment(\.colorScheme) private var colorScheme
+    // Keep disclosure and picker state above the optional scroll container so
+    // expanded cards stay open when their combined height exceeds the screen.
+    @State private var expandedSections: Set<PopoverSection> = []
+    @State private var processMetric: ProcessMetric = .cpu
 
     let maximumSize: CGSize
     var scrollViewport: CGSize? = nil
@@ -39,7 +43,7 @@ struct PopoverView: View {
     }
 
     private var dashboard: some View {
-        PopoverDashboardLayout(maximumSize: maximumSize, textScale: appState.textScale) {
+        VStack(spacing: 6) {
             GlassMorphicCard {
                 HStack {
                     Text("Vitals")
@@ -68,29 +72,25 @@ struct PopoverView: View {
                 }
             }
             ForEach(visibleSections) { section in
-                sectionView(for: section)
+                CompactSectionCard(
+                    section: section,
+                    isExpanded: Binding(
+                        get: { expandedSections.contains(section) },
+                        set: { expanded in
+                            if expanded { expandedSections.insert(section) } else { expandedSections.remove(section) }
+                        }
+                    ),
+                    processMetric: $processMetric
+                )
             }
         }
+        .padding(10)
+        .frame(width: min(280, maximumSize.width))
         .fixedSize()
         .onGeometryChange(for: CGSize.self) { geometry in
             geometry.size
         } action: { size in
             onContentSizeChange(size)
-        }
-    }
-
-    @ViewBuilder
-    private func sectionView(for section: PopoverSection) -> some View {
-        switch section {
-        case .system: SystemInfoDetailView()
-        case .cpu: CPUDetailView()
-        case .gpu: GPUDetailView()
-        case .memory: MemoryDetailView()
-        case .network: NetworkDetailView()
-        case .battery: BatteryDetailView()
-        case .disk: DiskDetailView()
-        case .wifi: WiFiDetailView()
-        case .processes: TopProcessesDetailView()
         }
     }
 }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MetricSectionHeader: View {
     @Environment(\.textScale) private var textScale
+    @Environment(\.metricCardPresentation) private var presentation
 
     let title: LocalizedStringKey
     let icon: String
@@ -9,6 +10,12 @@ struct MetricSectionHeader: View {
     var value: String?
 
     var body: some View {
+        if presentation != .details {
+            header
+        }
+    }
+
+    private var header: some View {
         HStack(spacing: 6) {
             Image(systemName: icon)
                 .scaledFont(13, weight: .semibold)

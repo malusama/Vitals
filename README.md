@@ -4,19 +4,38 @@ A lightweight macOS menu bar app that monitors your system in real time with a b
 
 Built with SwiftUI and designed for **macOS 26 (Tahoe)**.
 
-**Current version: 2.5** — See [CHANGELOG.md](CHANGELOG.md) for full release history.
+**Fork version: 2.5.6** — Based on [filiphajduch420/Vitals](https://github.com/filiphajduch420/Vitals) v2.5. See [CHANGELOG.md](CHANGELOG.md) for the changes.
 
-> **Note:** This app is not signed with an Apple Developer certificate. When you first open it, macOS will show a warning saying it "cannot verify the app is free of malware." To open it, go to **System Settings > Privacy & Security** and click **"Open Anyway"** next to the Vitals message. I'm a student and can't afford the $99/year Apple Developer Program fee, but the app is fully open source — you can review every line of code and build it yourself.
+## Changes in this fork
+
+- **Compact single-column popover** — The panel stays 280 points wide. CPU, GPU, memory, battery, disk, and network summaries fit on one screen at the default text size.
+- **Click to expand** — Click a card header to show its graphs and detailed statistics. Adapter input and battery charging/output power remain visible in the compact overview.
+- **Correct battery direction** — Signed battery power determines whether the battery is charging or supplying the Mac, including when a charger is connected. Battery data refreshes on macOS power notifications and when the panel opens.
+- **Clearer readings** — Neutral text for measurements, stronger light/dark accent colors, separate disk read/write speeds, and network graphs that scale to the current traffic.
+
+Adapter input is the measured power entering the Mac. The negotiated adapter limit (for example, 65 W) is shown in the expanded battery card and the adapter tooltip. Readings follow the macOS sensor update cadence.
+
+## Screenshots
+
+Screenshots capture the native macOS UI with sample readings. The dark example shows the battery supplying power while an adapter is attached.
+
+| Compact · Light | Compact · Dark | Expanded details |
+| --- | --- | --- |
+| <img src="media/popover-compact-light.jpg" alt="Compact single-column popover in light appearance" width="260"> | <img src="media/popover-compact-dark.jpg" alt="Compact dark popover with adapter input and battery output" width="260"> | <img src="media/popover-expanded.jpg" alt="Single-column popover with CPU and battery details expanded" width="260"> |
+
+The overview preserves your section order and text-size setting. Expanded cards show the full statistics; scrolling is available when the expanded content exceeds the screen height.
+
+> **Note:** Pre-built upstream releases are not signed with an Apple Developer certificate. macOS may ask you to use **System Settings > Privacy & Security > Open Anyway** on first launch. The source is available for review and local builds.
 
 ## Features
 
 - **Menu Bar** — Live CPU, GPU, memory, network, battery, disk stats right in your menu bar
 - **Liquid Glass UI** — Native `NSGlassEffectView` with 3 style variants and adjustable opacity
-- **CPU** — Usage breakdown (user/system/idle), core count, temperature, fan RPM, power draw
+- **CPU** — Usage breakdown (user/system/idle), core count, temperature, fan RPM, and total system power
 - **GPU** — Utilization, VRAM usage, temperature (Apple Silicon + Intel/AMD)
 - **Memory** — Used/total with active, wired, and compressed breakdown
 - **Network** — Live upload/download speeds with sparkline graphs and total transfer stats
-- **Battery** — Charge level, health %, cycle count, charging status, time remaining, temperature
+- **Battery** — Charge level, measured adapter input, battery charging/output power, negotiated adapter limit, health %, cycle count, charging status, time remaining, temperature
 - **Disk** — Usage bar, free space, read/write speeds, SSD temperature
 - **WiFi** — Connection status, signal strength, link speed, channel, local IP, and public IP (opt-in — the public IP lookup is disabled by default and queries an external service only when you enable it)
 - **System Info** — Computer name, user, macOS version, uptime
@@ -29,10 +48,9 @@ Built with SwiftUI and designed for **macOS 26 (Tahoe)**.
 - **Check for Updates** — A button in Settings > General > About that checks the GitHub Releases API on demand (privacy-first — only when you click it)
 - **Customizable** — Reorder sections and menu bar items, toggle visibility, adjust text size, choose glass style
 
-## Screenshots
+## Menu bar and settings
 
-### Popover
-![Vitals Popover](media/gui.png)
+The following images are from the upstream project.
 
 ### Menu Bar
 ![Menu Bar](media/menu_bar.png)
@@ -43,7 +61,7 @@ Built with SwiftUI and designed for **macOS 26 (Tahoe)**.
 ### Settings - General
 ![Settings General](media/settings_general.png)
 
-## What's New in v2.5
+## Upstream changes in v2.5
 
 - **Widgets that work for everyone** — the Storage, Battery, and System Info widgets now compute their data themselves inside the widget process, so they show real data even on the pre-built (unsigned) DMG build with no App Group
 - **Battery health on your desktop** — the Battery widget now surfaces battery health % and cycle count, a figure macOS doesn't show anywhere obvious
@@ -68,7 +86,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the complete list of changes.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/filiphajduch420/Vitals.git
+   git clone https://github.com/malusama/Vitals.git
    cd Vitals
    ```
 
@@ -85,9 +103,9 @@ See [CHANGELOG.md](CHANGELOG.md) for the complete list of changes.
 
 4. Select the **Vitals** scheme, set your signing team, and hit **Run** (Cmd+R).
 
-### Download release
+### Upstream downloads
 
-The recommended way to install a pre-built build:
+Build from source to use this fork's compact layout and power fixes. The pre-built downloads below are upstream releases:
 
 1. Download the latest `.dmg` from the [Releases](https://github.com/filiphajduch420/Vitals/releases) page (grab the matching `.sha256` file too).
 2. Verify the checksum:
@@ -109,7 +127,7 @@ xattr -dr com.apple.quarantine /Applications/Vitals.app
 
 ## Usage
 
-After launching, Vitals lives in your menu bar. Click the menu bar items to open the popover with detailed system stats.
+After launching, Vitals lives in your menu bar. Click the menu bar items to open the compact overview, then click a card header to expand or collapse its details.
 
 - **Settings** — Click the gear icon in the popover header
 - **Glass Style** — Choose between 3 Liquid Glass variants (A, B, C) in Appearance settings
