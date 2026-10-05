@@ -1,12 +1,17 @@
-import SwiftUI
 import AppKit
+import SwiftUI
 
 @MainActor
 final class StatusBarController {
     private var statusItem: NSStatusItem!
     private var panel: NSPanel!
+    private var hostingView: NSHostingView<AnyView>!
     private var appState: AppState
     private var globalMonitor: Any?
+    private var availableFrame = CGRect(x: 0, y: 0, width: 1_200, height: 800)
+    private var contentSize = CGSize.zero
+    private var anchorX: CGFloat = 0
+    private var needsScrolling = false
 
     init(appState: AppState) {
         self.appState = appState
@@ -144,14 +149,11 @@ final class StatusBarController {
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         panel.animationBehavior = .utilityWindow
 
-        let rootView = PopoverView()
-            .environment(appState)
-
-        let hostingView = NSHostingView(rootView: rootView)
+        hostingView = NSHostingView(rootView: AnyView(EmptyView()))
         hostingView.wantsLayer = true
         hostingView.layer?.backgroundColor = .clear
-
         panel.contentView = hostingView
+        updatePopoverRoot()
     }
 
     @objc private func togglePanel(_ sender: Any?) {
@@ -167,22 +169,69 @@ final class StatusBarController {
         appState.refreshBattery()
         let buttonFrame = button.window?.convertToScreen(button.frame) ?? .zero
 
-        // Always use full available height — panel is transparent so empty space is invisible
-        guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
-        let panelWidth: CGFloat = 290
-        let panelHeight = buttonFrame.minY - screen.visibleFrame.origin.y - 16
-
-        let x = buttonFrame.midX - panelWidth / 2
-        let y = buttonFrame.minY - 8 - panelHeight
-
-        panel.setFrame(NSRect(x: x, y: y, width: panelWidth, height: panelHeight), display: true)
+        guard
+            let screen = button.window?.screen
+                ?? NSScreen.screens.first(where: { $0.frame.intersects(buttonFrame) })
+                ?? NSScreen.main ?? NSScreen.screens.first
+        else { return }
+        let visibleFrame = screen.visibleFrame
+        let top = min(buttonFrame.minY - 8, visibleFrame.maxY)
+        availableFrame = CGRect(
+            x: visibleFrame.minX + 8, y: visibleFrame.minY + 8,
+            width: max(1, visibleFrame.width - 16), height: max(1, top - visibleFrame.minY - 8)
+        )
+        anchorX = buttonFrame.midX
+        needsScrolling = false
+        updatePopoverRoot()
+        hostingView.needsLayout = true
+        hostingView.layoutSubtreeIfNeeded()
+        contentSize = hostingView.fittingSize
+        needsScrolling = contentSize.height > availableFrame.height
+        if needsScrolling { updatePopoverRoot() }
+        resizePanel()
         panel.orderFrontRegardless()
         appState.isPopoverVisible = true
+        VitalsLog.app.debug(
+            "popover: content=\(self.contentSize.width, privacy: .public)x\(self.contentSize.height, privacy: .public) available=\(self.availableFrame.width, privacy: .public)x\(self.availableFrame.height, privacy: .public) scrolling=\(self.needsScrolling, privacy: .public)"
+        )
 
         // Close on outside click
-        globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+        globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) {
+            [weak self] _ in
             self?.hidePanel()
         }
+    }
+
+    private func updatePopoverRoot() {
+        let viewport =
+            needsScrolling ? CGSize(width: contentSize.width, height: availableFrame.height) : nil
+        hostingView.rootView = AnyView(
+            PopoverView(maximumSize: availableFrame.size, scrollViewport: viewport) { [weak self] size in
+                self?.contentSizeDidChange(size)
+            }
+            .environment(appState)
+        )
+    }
+
+    private func contentSizeDidChange(_ size: CGSize) {
+        guard size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0 else { return }
+        let previousWidth = contentSize.width
+        contentSize = size
+        guard panel.isVisible else { return }
+        let shouldScroll = size.height > availableFrame.height
+        if shouldScroll != needsScrolling || (shouldScroll && previousWidth != size.width) {
+            needsScrolling = shouldScroll
+            updatePopoverRoot()
+        }
+        resizePanel()
+    }
+
+    private func resizePanel() {
+        let width = min(ceil(contentSize.width), availableFrame.width)
+        let height = min(ceil(contentSize.height), availableFrame.height)
+        let x = min(max(anchorX - width / 2, availableFrame.minX), availableFrame.maxX - width)
+        let frame = CGRect(x: x, y: availableFrame.maxY - height, width: width, height: height)
+        if panel.frame != frame { panel.setFrame(frame, display: true) }
     }
 
     private func hidePanel() {
