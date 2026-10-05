@@ -51,16 +51,19 @@ The panel preserves your section order and text-size setting. Complete readings 
 
 ## Menu bar and settings
 
-The following images are from the upstream project.
+Native macOS previews captured from this fork's 2.5.8 views, using sample menu-bar readings and preferences. The settings example uses glass style B, 105% text size, and 80% text contrast.
 
 ### Menu Bar
-![Menu Bar](media/menu_bar.png)
+
+<img src="media/menu-bar.jpg" alt="Native menu bar preview with CPU, temperature, fan, GPU, power, memory, network, and battery readings" width="701">
 
 ### Settings - Appearance
-![Settings Appearance](media/settings_app.png)
+
+<img src="media/settings-appearance.jpg" alt="Appearance settings showing glass style B, 20 percent opacity, 105 percent text size, and 80 percent contrast" width="440">
 
 ### Settings - General
-![Settings General](media/settings_general.png)
+
+<img src="media/settings-general.jpg" alt="General settings showing startup, language, two-second refresh, and five-second battery saving refresh" width="440">
 
 ## Upstream changes in v2.5
 
