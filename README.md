@@ -4,12 +4,12 @@ A lightweight macOS menu bar app that monitors your system in real time with a b
 
 Built with SwiftUI and designed for **macOS 26 (Tahoe)**.
 
-**Fork version: 2.5.7** — Based on [filiphajduch420/Vitals](https://github.com/filiphajduch420/Vitals) v2.5. See [CHANGELOG.md](CHANGELOG.md) for the changes.
+**Fork version: 2.5.8** — Based on [filiphajduch420/Vitals](https://github.com/filiphajduch420/Vitals) v2.5. See [CHANGELOG.md](CHANGELOG.md) for the changes.
 
 ## Changes in this fork
 
-- **Compact single-column popover** — The panel stays 280 points wide. CPU, GPU, memory, battery, disk, and network summaries fit on one screen at the default text size.
-- **Click to expand** — Click a card header to show its graphs and detailed statistics. Adapter input and battery charging/output power remain visible in the compact overview.
+- **Narrow single-column popover** — The panel stays 280 points wide, with CPU, GPU, memory, battery, disk, and network readings together.
+- **Full details at launch** — All cards show their complete graphs and statistics as soon as the panel opens, including adapter input, battery charging/output, health, and cycle count.
 - **Fully expanded on one screen** — Tighter card padding and text-size-aware detail spacing keep all six core cards visible together on the tested 1512 × 982-point display, including at 130% text size. Text and graph sizes are preserved.
 - **Correct battery direction** — Signed battery power determines whether the battery is charging or supplying the Mac, including when a charger is connected. Battery data refreshes on macOS power notifications and when the panel opens.
 - **Clearer readings** — Neutral text for measurements, stronger light/dark accent colors, separate disk read/write speeds, and network graphs that scale to the current traffic.
@@ -20,11 +20,11 @@ Adapter input is the measured power entering the Mac. The negotiated adapter lim
 
 Screenshots capture the native macOS UI with sample readings. The dark example shows the battery supplying power while an adapter is attached.
 
-| Compact · Light | Compact · Dark | All six expanded |
+| Full details · Light | Full details · Dark | 130% text size |
 | --- | --- | --- |
-| <img src="media/popover-compact-light.jpg" alt="Compact single-column popover in light appearance" width="260"> | <img src="media/popover-compact-dark.jpg" alt="Compact dark popover with adapter input and battery output" width="260"> | <img src="media/popover-expanded.jpg" alt="Single-column popover with all six core cards expanded without scrolling" width="260"> |
+| <img src="media/popover-expanded-light.jpg" alt="Fully expanded single-column popover in light appearance" width="260"> | <img src="media/popover-expanded-dark.jpg" alt="Fully expanded dark popover with adapter input and battery output" width="260"> | <img src="media/popover-expanded-large-text.jpg" alt="All six core cards visible without scrolling at 130 percent text size" width="260"> |
 
-The overview preserves your section order and text-size setting. Expanded cards show the full statistics. Scrolling remains available for smaller screens or when additional optional sections exceed the available height.
+The panel preserves your section order and text-size setting. Complete readings stay visible. Scrolling remains available for smaller screens or when additional optional sections exceed the available height.
 
 > **Note:** Pre-built upstream releases are not signed with an Apple Developer certificate. macOS may ask you to use **System Settings > Privacy & Security > Open Anyway** on first launch. The source is available for review and local builds.
 
@@ -128,7 +128,7 @@ xattr -dr com.apple.quarantine /Applications/Vitals.app
 
 ## Usage
 
-After launching, Vitals lives in your menu bar. Click the menu bar items to open the compact overview, then click a card header to expand or collapse its details.
+After launching, Vitals lives in your menu bar. Click the menu bar items to open the panel with all readings already visible.
 
 - **Settings** — Click the gear icon in the popover header
 - **Glass Style** — Choose between 3 Liquid Glass variants (A, B, C) in Appearance settings

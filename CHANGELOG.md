@@ -2,6 +2,13 @@
 
 All notable changes to Vitals will be documented in this file.
 
+## [2.5.8] - 2026-10-05 (malusama fork)
+
+### Changed
+- Open every card with its complete readings and graphs visible; remove the disclosure buttons and collapsed summaries.
+- Keep the narrow layout and text-size-aware spacing from 2.5.7.
+- Replace all three README screenshots with the fully expanded light, dark, and 130% text layouts.
+
 ## [2.5.7] - 2026-10-05 (malusama fork)
 
 ### Changed

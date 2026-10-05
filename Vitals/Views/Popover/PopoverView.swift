@@ -4,9 +4,7 @@ struct PopoverView: View {
 
     @Environment(AppState.self) private var appState
     @Environment(\.colorScheme) private var colorScheme
-    // Keep disclosure and picker state above the optional scroll container so
-    // expanded cards stay open when their combined height exceeds the screen.
-    @State private var expandedSections: Set<PopoverSection> = []
+    // Preserve the processes picker if optional cards require a scroll container.
     @State private var processMetric: ProcessMetric = .cpu
 
     let maximumSize: CGSize
@@ -73,16 +71,7 @@ struct PopoverView: View {
             }
             .environment(\.metricCardPresentation, .compact)
             ForEach(visibleSections) { section in
-                CompactSectionCard(
-                    section: section,
-                    isExpanded: Binding(
-                        get: { expandedSections.contains(section) },
-                        set: { expanded in
-                            if expanded { expandedSections.insert(section) } else { expandedSections.remove(section) }
-                        }
-                    ),
-                    processMetric: $processMetric
-                )
+                PopoverSectionCard(section: section, processMetric: $processMetric)
             }
         }
         .padding(8)
